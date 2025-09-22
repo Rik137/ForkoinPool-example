@@ -17,9 +17,9 @@ It recursively traverses links within a given domain and writes the discovered U
 
 ## Project Structure
 
-src/example/
-│
-├── CrawlTask.java # RecursiveTask handling crawling logic
+src/example/  
+│  
+├── CrawlTask.java # RecursiveTask handling crawling logic  
 ├── Test1.java # Entry point (starts the crawler)
 
 ---
