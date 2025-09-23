@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 
 public class CrawlTask extends RecursiveTask<Void> {
     private static final Logger logger = Logger.getLogger(CrawlTask.class.getName());
-    private static final String DOMAIN = "https://sendel.ru";  // Базовый домен
+    private static final String DOMAIN = "https://sendel.ru";
     private final String url;
     private final Set<String> visited;
     private final BufferedWriter writer;
@@ -31,7 +31,7 @@ public class CrawlTask extends RecursiveTask<Void> {
     @Override
     protected Void compute() {
         if (visited.contains(url)) {
-            logger.info("Страница уже была посещена, пропускаем: " + url);
+            logger.info("The page has already been visited, skip: " + url);
             return null;
         }
 
@@ -39,8 +39,8 @@ public class CrawlTask extends RecursiveTask<Void> {
             synchronized (visited) {
                 visited.add(url);
             }
-            logger.info("Посещаем: " + url);
-            Thread.sleep(100 + (int) (Math.random() * 50));  // Задержка 100-150 мс
+            logger.info("Visit: " + url);
+            Thread.sleep(100 + (int) (Math.random() * 50));
             Document doc = Jsoup.connect(url).get();
             List<Element> links = doc.select("a[href]");
 
@@ -48,7 +48,7 @@ public class CrawlTask extends RecursiveTask<Void> {
 
                 String tabIndentation = "\t".repeat(depth);
                 writer.write(tabIndentation + url + "\n");
-                logger.info("Записываем в файл: " + url);
+                logger.info("Write to a file: " + url);
             }
 
             List<CrawlTask> subTasks = new ArrayList<>();
@@ -56,10 +56,10 @@ public class CrawlTask extends RecursiveTask<Void> {
             for (Element link : links) {
                 String linkHref = link.absUrl("href");
                 if (linkHref.contains(url) && !linkHref.contains("#") && !visited.contains(linkHref)) {
-                    logger.info("Обрабатываем дочернюю ссылку: " + linkHref);
+                    logger.info("Handling the child link: " + linkHref);
                     CrawlTask subTask = new CrawlTask(linkHref, visited, writer, depth + 1);
-                    subTasks.add(subTask); // Добавляем дочернюю задачу в список
-                    subTask.fork(); // Запуск дочерней задачи
+                    subTasks.add(subTask);
+                    subTask.fork(); 
                 }
             }
 
@@ -67,7 +67,7 @@ public class CrawlTask extends RecursiveTask<Void> {
                 subTask.join();
             }
         } catch (IOException | InterruptedException e) {
-            logger.warning("Ошибка при обработке страницы " + url + ": " + e.getMessage());
+            logger.warning("Page processing error " + url + ": " + e.getMessage());
         }
         return null;
     }
