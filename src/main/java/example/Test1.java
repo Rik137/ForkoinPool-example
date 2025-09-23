@@ -21,9 +21,9 @@ public class Test1 {
             forkJoinPool.invoke(crawlTask);
 
         } catch (IOException e) {
-            logger.severe("Ошибка при работе с файлом: " + e.getMessage());
+            logger.severe("Error when working with a file " + e.getMessage());
         } catch (Exception e) {
-            logger.severe("Ошибка при выполнении задачи: " + e.getMessage());
+            logger.severe("Task Execution Error: " + e.getMessage());
         }
     }
 }
